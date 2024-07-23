@@ -1,5 +1,15 @@
 # Yakkyo fullstack test
 
+## Solution
+
+The containerization of the app was the most challenging part. The issues I faced were in relation to using turborepo and a silicon mac with rosseta. At first I started implementing Dockerfiles for each service but quickly changed strategy after reading and doing some research about turborepo. Now there is only one Dockerfile which gets reused for each service.
+
+One major issue in a Mac environment using Docker is the Puppeteer package. Did some research but could not find a solution for this. A simple workaround to test the functionality is implemented as a backup. The code for Puppeteer should work on other devices.
+
+Overall the solution is pretty simple and is following the code standards already in the repo. Pretty much most of what I've written is an extension of existing code because I didn't want to overcomplicate things with unnecessary changes to infrastructure.
+
+Also I hadn't used Vue.js before, so I read some of the documentation on the official site. Since version 2.7 is a litte outdated, information regarding local component state management was a bit tedious.
+
 ## Introduction
 
 Hello! Thank you for your interest in working with us. We don't believe in subjecting candidates to tasks like creating a vertical order traversal in a binary tree or ~~crap~~ impractical questions like that. Instead, we prefer to present a simplified version of our stack and observe how you can address a typical and practical issue/feature.

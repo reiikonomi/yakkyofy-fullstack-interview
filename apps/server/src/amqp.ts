@@ -5,9 +5,13 @@ const rabbit = new Connection(config.RABBIT_MQ)
 rabbit.on('error', err => console.error('RabbitMQ connection error', err))
 rabbit.on('connection', () => console.info('Connection successfully (re)established'))
 
-// create your publisher
-// const publisher = rabbit.createPublisher({ <config> })
-// await publisher.send(<queue>, <body>)
+const publisher = rabbit.createPublisher({
+  queues: [
+    {
+      queue: 'screenshot'
+    }
+  ]
+})
 
 async function onShutdown() {
   console.info('SIGTERM signal received: closing RabbitMQ connections')
@@ -18,4 +22,4 @@ async function onShutdown() {
 process.on('SIGINT', onShutdown)
 process.on('SIGTERM', onShutdown)
 
-export { rabbit }
+export { rabbit, publisher }

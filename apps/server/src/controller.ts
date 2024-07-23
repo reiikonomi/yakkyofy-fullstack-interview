@@ -17,8 +17,6 @@ const refresh = async (req: Request, res: Response) => {
   res.sendStatus(200)
 }
 
-// TODO: ... more?
-
 // this one should be protected
 const getUser = async (req: Request, res: Response) => {
   res.sendStatus(200)

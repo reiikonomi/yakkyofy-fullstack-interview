@@ -1,0 +1,91 @@
+version: '3.8'
+
+x-defaults: &defaults
+  init: true
+  tty: true
+  networks:
+    - turborepo_network
+
+networks:
+  turborepo_network:
+
+
+services:
+  client:
+    <<: *defaults
+    ports:
+      - "8080:8080"
+    command: yarn workspace client dev
+    environment:
+      - PORT=8080
+    build:
+      args:
+        APP: client
+        START_COMMAND: dev
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./apps/client:/app/apps/client
+      - /app/apps/client/node_modules
+    depends_on:
+      - server
+
+  server:
+    <<: *defaults
+    ports:
+      - "3000:3000"
+    command: yarn workspace server dev
+    restart: always
+    environment:
+      - PORT=3000
+    build:
+      args:
+        APP: server
+        START_COMMAND: dev
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./apps/server:/app/apps/server
+      - /app/apps/server/node_modules
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  consumer:
+    <<: *defaults
+    command: yarn workspace consumer dev
+    restart: always
+    # environment:
+    #   - PORT=3000
+    build:
+      args:
+        APP: consumer
+        START_COMMAND: start
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./apps/consumer:/app/apps/consumer
+      - /app/apps/consumer/node_modules
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - '27017:27017'
+    networks:
+      - turborepo_network
+    volumes:
+      - dbdata6:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+    networks:
+      - turborepo_network
+
+volumes:
+  dbdata6:

@@ -6,7 +6,6 @@ export const api: any = async (method: string, url: string, data?: any) => {
 
     const response = await fetch(`${backendUrl}${url}${queryParams}`, {
       method,
-      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },

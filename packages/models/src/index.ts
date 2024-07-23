@@ -1,2 +1,3 @@
 import User from './user'
-export { User }
+import Screenshot from './screenshot'
+export { User, Screenshot }
