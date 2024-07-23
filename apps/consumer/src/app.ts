@@ -11,12 +11,7 @@ rabbit.on('connection', () => console.info('RabbitMQ Connection successfully (re
 rabbit
   .createConsumer({ queue: 'screenshot' }, async msg => {
     console.log(connection.readyState)
-
-    console.log('Received message', msg.body)
-
     const screenshot = await Screenshot.findOne({ _id: msg.body.id })
-
-    console.log('Processing screenshot', screenshot)
 
     if (!screenshot) {
       console.error('Screenshot not found')
@@ -25,22 +20,23 @@ rabbit
 
     await screenshot.updateOne({ status: 'processing' })
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      // executablePath: '/usr/bin/chromium-browser',
-      ignoreHTTPSErrors: true,
-      args: ['--no-sandbox', '--disable-gpu', '--disable-setuid-sandbox']
-    })
+    // TODO: comment puppeteer code if using mac, for some reason it doesn't work with silicon processors
+    const browser = await puppeteer.launch()
 
     const page = await browser.newPage()
 
     await page.goto(msg.body.url)
 
-    const screenshotFile = await page.screenshot()
+    const screenshotFile = await page.screenshot({ fullPage: true, encoding: 'binary' })
 
     await browser.close()
 
     await screenshot.updateOne({ file: screenshotFile, status: 'done' })
+
+    // TODO: uncomment this code if using mac, for test purposes only
+    // const fs = require('fs')
+    // const path = require('path')
+    // const screenshotFile = fs.readFileSync(path.join(__dirname, 'test.webp'))
   })
   .on('error', err => {
     console.error('consumer error (saturation)', err)
