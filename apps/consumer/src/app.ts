@@ -5,8 +5,11 @@ const rabbit = new Connection(config.RABBIT_MQ)
 rabbit.on('error', err => console.error('RabbitMQ connection error', err))
 rabbit.on('connection', () => console.info('RabbitMQ Connection successfully (re)established'))
 
-// TODO: here you should create your subscriber which is going to consume messages from the queue
-// in this case, the consumer is going to be a microservice which is going to delete users from the database
+rabbit
+  .createConsumer({ queue: 'screenshot' }, msg => {
+    console.log('Received message', msg)
+  })
+  .on('error', err => console.error('consumer error (saturation)', err))
 
 // subscribers
 // const subscriber = rabbit.createConsumer({}, (msg) => {})
