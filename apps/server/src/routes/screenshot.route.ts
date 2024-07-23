@@ -28,6 +28,7 @@ router.post('/create', async (req, res) => {
       await publisher.send('screenshot', { id: screenshot._id, url: screenshot.url })
       res.status(201).send({
         message: 'Success',
+        status: 201,
         data: {
           url: screenshot.url,
           id: screenshot._id

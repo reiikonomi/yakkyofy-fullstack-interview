@@ -1,6 +1,6 @@
 FROM node:20.2-alpine3.17 as base
 
-RUN apk add -f --update --no-cache --virtual .gyp nano bash libc6-compat python3 make g++ \
+RUN apk add -f --update --no-cache --virtual .gyp nano udev chromium ttf-freefont nss bash ca-certificates freetype harfbuzz libc6-compat python3 make g++ \
       && yarn global add turbo@1.9.0 \
       && apk del .gyp
 
